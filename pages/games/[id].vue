@@ -30,7 +30,7 @@
   </main>
 </template>
 
-<script>
+<script setup>
 const route = useRoute();
 const options = {
   method: 'GET',
@@ -40,8 +40,10 @@ const options = {
   },
 };
 
-const { data } = await useFetch(() => `https://free-to-play-games-database.p.rapidapi.com/api/game?id=${route.params.id}`, options);
+// const { data } = await useFetch(() => `https://free-to-play-games-database.p.rapidapi.com/api/game?id=${route.params.id}`, options);
 
-console.log(data.value);
+// console.log(data.value);
+
+console.log(route.params.id)
 
 </script>
