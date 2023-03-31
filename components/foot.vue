@@ -1,5 +1,5 @@
 <template>
-  <footer class="bg-neutral-950 mt-2 grid grid-cols-1 gap-y-6 justify-items-center
+  <footer class="bg-neutral-950 mt-10 grid grid-cols-1 gap-y-6 justify-items-center
     lg:grid-cols-3">
     <div class="w-48">
       <a href="">

@@ -1,10 +1,10 @@
 <template>
   <section class="flex flex-col min-h-screen">
     <Navbar />
-    <section class="flex justify-center w-full">
+    <section class="flex flex-col items-center w-full">
       <NuxtPage />
     </section>
-    <Foot class="flex-shrink-0 mt-auto"/>
+    <Foot class="flex-shrink-0 mt-auto md:flex justify-between"/>
   </section>
 </template>
 

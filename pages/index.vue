@@ -1,11 +1,16 @@
 <template>
-  <main class="grid grid-cols-1 gap-6 mt-20 mx-10 justify-items-center max-w-sm
-                md:grid-cols-12 md:max-w-screen-md
-                lg:max-w-screen-lg lg:mx-12
-                xl:max-w-screen-xl xl:mx-20">
+  <header class="flex mt-20 px-10 max-w-screen-sm mb-2 w-full 
+            md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl">
+    <input type="text" name="search" id="search" placeholder="Search for games..." autocomplete="off"
+      class="w-full bg-neutral-700 h-10" v-model.trim="searchTerm" @change="search()">
+  </header>
+  <main class="grid grid-cols-1 gap-6 mx-10 justify-items-center max-w-sm
+            md:grid-cols-12 md:max-w-screen-md
+            lg:max-w-screen-lg lg:mx-12
+            xl:max-w-screen-xl xl:mx-20">
     <section class="flex flex-col justify-start w-full 
-                  md:col-start-1 md:col-end-5
-                  lg:col-end-4">
+              md:col-start-1 md:col-end-5
+              lg:col-end-4">
       <Filter title="Platform">
         <template #select>
           <select class="w-full border-0 text-lg h-10 text-gray-500 bg-neutral-900 empty:hidden" autocomplete="off"
@@ -69,7 +74,7 @@
       </Filter>
     </section>
     <GameList class="md:col-start-5 md:col-end-13
-                    lg:col-start-4" />
+                                    lg:col-start-4" />
   </main>
 </template>
 
@@ -177,32 +182,31 @@ const selectedTags = computed(() => {
   return tag;
 });
 
-// watch(
-//   () => [selectedPlatforms.value, selectedCategories.value, selectedTags.value],
-//   () => {
-//     console.log(selectedPlatforms.value);
-//     console.log(selectedCategories.value);
-//     console.log(selectedTags.value);
-//   })
+const options = {
+  method: 'GET',
+  headers: {
+    'X-RapidAPI-Key': 'c40d428cdamshc9610d296a3fda7p107c53jsncebbbe3a4c5c',
+    'X-RapidAPI-Host': 'free-to-play-games-database.p.rapidapi.com',
+  },
+  query: {}
+};
 
-// watch(() => sortBy.value, () => console.log(sortBy.value));
+const searchTerm = ref('');
+const games = useGames();
+const gamesCache = useGamesCache();
+
+async function search() {
+  if (searchTerm.value !== '') {
+    const sanitized = searchTerm.value.toLowerCase();
+    games.value = gamesCache.value.filter(item => item.title.toLowerCase().includes(sanitized));
+  } else {
+    games.value = gamesCache.value;
+  }
+}
 
 watch(
   () => [selectedPlatforms.value, selectedCategories.value, selectedTags.value, sortBy.value],
   async () => {
-    // console.log(sortBy.value)
-    const games = useGames();
-    let options = {
-      method: 'GET',
-      headers: {
-        'X-RapidAPI-Key': 'c40d428cdamshc9610d296a3fda7p107c53jsncebbbe3a4c5c',
-        'X-RapidAPI-Host': 'free-to-play-games-database.p.rapidapi.com',
-      },
-      query: {}
-    };
-
-    let query = {};
-
     if (selectedPlatforms.value.length === 2) {
       options.query['platform'] = 'all';
     } else if (selectedPlatforms.value.length === 1) {
@@ -212,8 +216,6 @@ watch(
     if (sortBy.value !== '') {
       options.query['sort-by'] = sortBy.value;
     }
-    // console.log(options.query);
-    // console.log(sortBy.value)
 
 
     if (selectedCategories.value.length === 0
@@ -228,7 +230,7 @@ watch(
       }
     } else {
       const tags = `${selectedTags.value.concat(selectedCategories.value).join('.')}`;
-      query.tag = tags;
+      options.query.tag = tags;
       try {
         const { data } = await useFetch(
           () => `https://free-to-play-games-database.p.rapidapi.com/api/filter`,

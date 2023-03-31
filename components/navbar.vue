@@ -18,6 +18,9 @@
         </li>
       </ul>
     </section>
+    <button class="border-white border-2 p-2 rounded-md hidden lg:block">
+      <p>Log In</p>
+    </button>
     <button class="lg:hidden">
       <img src="~/assets/img/hamburger.svg" alt="" class="w-14">
     </button>

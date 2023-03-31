@@ -20,7 +20,9 @@ const options = {
 
 const { data } = await useFetch(() => 'https://free-to-play-games-database.p.rapidapi.com/api/games', options);
 const games = useGames();
+const gamesCache = useGamesCache()
 
-games.value = data.value.slice(0, 100);
+gamesCache.value = data.value;
+games.value = gamesCache.value.slice(0, 100);
 const gameList = ref(games);
 </script>
