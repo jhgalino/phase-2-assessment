@@ -1,8 +1,6 @@
 
 <template>
-  <section class="grid grid-cols-1 auto-rows-min gap-6 justify-items-center
-    lg:grid-cols-2 xl:grid-cols-3">
-    <!-- <GameListCard v-for="item in data"></GameListCard> -->
+  <section class="grid grid-cols-1 gap-6 auto-rows-min justify-items-center lg:grid-cols-2 xl:grid-cols-3">
     <GameListCard v-for="game in gameList" :thumbnail="game.thumbnail" :title="game.title"
       :description="game.short_description" :platform="game.platform" :genre="game.genre" :id="game.id"
       :key="game.id" />

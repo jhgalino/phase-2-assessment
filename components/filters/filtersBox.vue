@@ -1,14 +1,14 @@
 <template>
-  <section class="bg-neutral-700 rounded-md w-full mb-6">
+  <section class="w-full mb-6 rounded-md bg-neutral-700">
     
     <!-- Dropdown List -->
    
       <slot name="select"></slot>
 
     <section class="px-6 pb-6">
-      <p class="text-2xl my-3 font-bold">{{ title }}</p>
+      <p class="my-3 text-2xl font-bold">{{ title }}</p>
       <hr>
-      <div class="max-h-40 overflow-y-scroll">
+      <div class="overflow-y-scroll max-h-40">
         <slot name="choices"></slot>
       </div>
 

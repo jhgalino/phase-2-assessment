@@ -4,7 +4,7 @@
     <section class="flex flex-col items-center w-full">
       <NuxtPage />
     </section>
-    <Foot class="flex-shrink-0 mt-auto md:flex justify-between"/>
+    <Foot class="justify-between flex-shrink-0 mt-auto md:flex" />
   </section>
 </template>
 
