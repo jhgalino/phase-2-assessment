@@ -1,6 +1,5 @@
-
 <template>
-  <section class="grid grid-cols-1 gap-6 auto-rows-min justify-items-center lg:grid-cols-2 xl:grid-cols-3">
+  <section class="grid grid-cols-1 gap-6 auto-rows-min justify-items-center lg:grid-cols-12 xl:grid-cols-3">
     <GameListCard v-for="game in gameList" :thumbnail="game.thumbnail" :title="game.title"
       :description="game.short_description" :platform="game.platform" :genre="game.genre" :id="game.id"
       :key="game.id" />
@@ -8,19 +7,7 @@
 </template>
 
 <script setup>
-const options = {
-  method: 'GET',
-  headers: {
-    'X-RapidAPI-Key': 'c40d428cdamshc9610d296a3fda7p107c53jsncebbbe3a4c5c',
-    'X-RapidAPI-Host': 'free-to-play-games-database.p.rapidapi.com'
-  }
-};
-
-const { data } = await useFetch(() => 'https://free-to-play-games-database.p.rapidapi.com/api/games', options);
-const games = useGames();
-const gamesCache = useGamesCache()
-
-gamesCache.value = data.value;
-games.value = gamesCache.value.slice(0, 100);
-const gameList = ref(games);
+const props = defineProps({
+  gameList: Array
+})
 </script>
