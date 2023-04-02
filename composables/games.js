@@ -10,6 +10,4 @@ export function fetchGames () {
     },
     query: {},
   };
-
-  
 }

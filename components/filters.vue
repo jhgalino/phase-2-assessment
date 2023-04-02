@@ -1,9 +1,9 @@
 <template>
   <section>
-    <FiltersBox title="Platform">
+    <FiltersBox title="Platform" :items="platforms">
       <template #select>
-        <select class="w-full h-10 text-lg text-gray-500 border-0 bg-neutral-900 empty:hidden" autocomplete="off"
-          v-model="sortBy">
+        <select autocomplete="off" v-model="sortBy"
+          class="w-full h-10 text-lg text-gray-500 border-0 bg-neutral-900 empty:hidden">
           <option value="">Sorted By:</option>
           <option value="relevance">Relevance</option>
           <option value="popularity">Popularity</option>
@@ -11,60 +11,35 @@
           <option value="alphabetical">Alphabetical</option>
         </select>
       </template>
-
-      <template #choices>
-        <FiltersBoxChoices :items="platforms" @FiltersBoxOptionChecked="" />
-      </template>
     </FiltersBox>
 
-    <FiltersBox title="Genre">
+    <FiltersBox title="Genre" :items="categories">
       <template #select>
-        <select class="w-full h-10 text-lg text-gray-500 border-0 bg-neutral-900 empty:hidden">
+        <select autocomplete="off" 
+        class="w-full h-10 text-lg text-gray-500 border-0 bg-neutral-900 empty:hidden">
           <option value="">FiltersBox Type:</option>
           <option value="and">AND (All of the options selected)</option>
           <option value="or">OR (Any of the options selected)</option>
           <option value="not">NOT (Excluding options)</option>
         </select>
       </template>
-
-      <template #choices>
-        <FiltersBoxChoices :items="categories" />
-      </template>
     </FiltersBox>
 
-    <FiltersBox title="Graphics">
-      <template #choices>
-        <FiltersBoxChoices :items="graphics" />
-      </template>
-    </FiltersBox>
+    <FiltersBox title="Graphics" :items="graphics" />
 
-    <FiltersBox title="Combat">
-      <template #choices>
-        <FiltersBoxChoices :items="combat" />
-      </template>
-    </FiltersBox>
+    <FiltersBox title="Combat" :items="combat" />
 
-    <FiltersBox title="Gameplay">
-      <template #choices>
-        <FiltersBoxChoices :items="gameplay" />
-      </template>
-    </FiltersBox>
+    <FiltersBox title="Gameplay" :items="gameplay" />
 
-    <FiltersBox title="Setting">
-      <template #choices>
-        <FiltersBoxChoices :items="setting" />
-      </template>
-    </FiltersBox>
+    <FiltersBox title="Setting" :items="setting" />
 
-    <FiltersBox title="Tags">
-      <template #choices>
-        <FiltersBoxChoices :items="tags" />
-      </template>
-    </FiltersBox>
+    <FiltersBox title="Tags" :items="tags" />
   </section>
 </template>
 
 <script setup>
+const games = useGames();
+// const gamesCache = useGamesCache();
 const sortBy = ref('');
 
 const platforms = ref([
@@ -176,4 +151,42 @@ const options = {
   },
   query: {}
 };
+
+watch(
+  () => [selectedPlatforms.value, selectedCategories.value, selectedTags.value, sortBy.value],
+  async () => {
+    if (selectedPlatforms.value.length === 2) {
+      options.query['platform'] = 'all';
+    } else if (selectedPlatforms.value.length === 1) {
+      options.query['platform'] = `${selectedPlatforms.value[0]}`;
+    }
+
+    if (sortBy.value !== '') {
+      options.query['sort-by'] = sortBy.value;
+    }
+
+
+    if (selectedCategories.value.length === 0
+      && selectedTags.value.length === 0) {
+      try {
+        const { data } = await useFetch(
+          () => `https://free-to-play-games-database.p.rapidapi.com/api/games`,
+          options);
+        games.value = data.value;
+      } catch (err) {
+        return err;
+      }
+    } else {
+      const tags = `${selectedTags.value.concat(selectedCategories.value).join('.')}`;
+      options.query.tag = tags;
+      try {
+        const { data } = await useFetch(
+          () => `https://free-to-play-games-database.p.rapidapi.com/api/filter`,
+          options);
+        games.value = data.value;
+      } catch (err) {
+        return err
+      }
+    }
+  });
 </script>

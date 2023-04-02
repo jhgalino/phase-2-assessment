@@ -6,9 +6,17 @@
 </template>
 
 <script setup>
-  const searchTerm = ref('');
+const games = useGames();
+const gamesCache = useGamesCache()
+const searchTerm = ref('');
 
-  function search() {
-    console.log('hello');
+
+async function search() {
+  if (searchTerm.value !== '') {
+    const sanitized = searchTerm.value.toLowerCase();
+    games.value = gamesCache.value.filter(item => item.title.toLowerCase().includes(sanitized));
+  } else {
+    games.value = gamesCache.value;
   }
+}
 </script>
